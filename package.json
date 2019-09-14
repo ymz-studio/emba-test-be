@@ -3,7 +3,7 @@
 	"version": "1.0.0",
 	"description": "",
 	"scripts": {
-		"build": "parcel build main.ts --target node",
+		"build": "tsc",
 		"watch:hmr": "parcel main.ts --target node",
 		"watch": "nodemon dist/main.js",
 		"dev": "npm-run-all build --parallel watch watch:hmr",
