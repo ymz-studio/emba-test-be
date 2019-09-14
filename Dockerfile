@@ -6,10 +6,10 @@ COPY package.json ./
 
 RUN npm install
 
-COPY ./dist .
+COPY . .
 
 RUN npm run build
 
 EXPOSE 1234
 
-CMD [ "node", "main.js" ]
+CMD [ "node", "dist/main.js" ]
