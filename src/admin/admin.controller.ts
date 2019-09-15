@@ -1,17 +1,20 @@
-import { Controller, Get, Post, Res } from "@nestjs/common";
+import { Controller, Get, Post, Res, UseGuards } from "@nestjs/common";
 import { AppService } from "../app.service";
 import { Response } from "express";
 import xlsx from "xlsx";
+import { AuthGuard } from "../auth/auth.guard";
 
 @Controller("admin")
 export class AdminController {
   constructor(private readonly appService: AppService) {}
   @Get("token")
+  @UseGuards(AuthGuard)
   getToken() {
     return this.appService.token;
   }
 
   @Post("start")
+  @UseGuards(AuthGuard)
   start() {
     this.appService.data = [];
     this.appService.token = Math.random()
@@ -20,32 +23,33 @@ export class AdminController {
   }
 
   @Post("stop")
+  @UseGuards(AuthGuard)
   stop() {
     this.appService.data = [];
     this.appService.token = "";
   }
 
   @Get("data")
+  @UseGuards(AuthGuard)
   getData() {
     return this.appService.data;
   }
 
   @Get("data/sse")
+  @UseGuards(AuthGuard)
   getDataSse(@Res() res: Response) {
     res.writeHead(200, {
       "Content-Type": "text/event-stream",
       "Cache-Control": "no-cache",
       Connection: "keep-alive"
     });
-    res.write("retry: 20\n");
-    res.write("event: connecttime\n");
-    res.write("data: " + new Date() + "\n\n");
     this.appService.dataSubject.subscribe(() => {
       res.write("data: " + JSON.stringify(this.appService.data) + "\n\n");
     });
   }
 
   @Get("export")
+  @UseGuards(AuthGuard)
   getExportXlsx(@Res() res: Response) {
     const book = xlsx.utils.book_new();
     xlsx.utils.book_append_sheet(
