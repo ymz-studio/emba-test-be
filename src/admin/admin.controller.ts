@@ -43,6 +43,7 @@ export class AdminController {
       "Cache-Control": "no-cache",
       Connection: "keep-alive"
     });
+    res.write("retry: 10000\n");
     this.appService.dataSubject.subscribe(() => {
       res.write("data: " + JSON.stringify(this.appService.data) + "\n\n");
     });
